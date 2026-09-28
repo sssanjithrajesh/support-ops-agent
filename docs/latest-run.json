@@ -1,0 +1,81 @@
+{
+  "tickets": 2000,
+  "actions": {
+    "review": 1688,
+    "escalate": 303,
+    "auto_send": 9
+  },
+  "rules": {
+    "auto_send_failed": 1688,
+    "legal_or_security": 221,
+    "outage_high": 46,
+    "data_loss_reported": 33,
+    "auto_send": 9,
+    "enterprise_and_high": 3
+  },
+  "signals": {
+    "security": {
+      "fired": 221,
+      "escalated": 221
+    },
+    "outage": {
+      "fired": 48,
+      "escalated": 48
+    },
+    "data_loss": {
+      "fired": 35,
+      "escalated": 35
+    },
+    "enterprise": {
+      "fired": 3,
+      "escalated": 3
+    },
+    "refund_request": {
+      "fired": 1,
+      "escalated": 0
+    }
+  },
+  "by_queue": {
+    "Technical Support": {
+      "escalate": 211,
+      "review": 527
+    },
+    "Product Support": {
+      "review": 499,
+      "escalate": 26
+    },
+    "Customer Service": {
+      "review": 272,
+      "auto_send": 8,
+      "escalate": 7
+    },
+    "Billing and Payments": {
+      "review": 189,
+      "escalate": 11
+    },
+    "IT Support": {
+      "review": 106,
+      "escalate": 7
+    },
+    "Service Outages and Maintenance": {
+      "escalate": 38,
+      "review": 22
+    },
+    "Returns and Exchanges": {
+      "review": 35,
+      "escalate": 3
+    },
+    "Sales and Pre-Sales": {
+      "review": 16,
+      "auto_send": 1
+    },
+    "Human Resources": {
+      "review": 14
+    },
+    "General Inquiry": {
+      "review": 8
+    }
+  },
+  "grounded_drafts": 1985,
+  "redactions": 0
+}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block header %}<small>planner: {{ planner }}</small>{% endblock %}
+{% block content %}
+<div class="stats">
+  <div class="stat"><b>{{ q.n_tickets }}</b><span>tickets seen</span></div>
+  <div class="stat"><b>{{ q.actions.get('escalate', 0) }}</b><span>escalated to Slack</span></div>
+  <div class="stat"><b>{{ q.pending|length }}</b><span>awaiting a human</span></div>
+  <div class="stat"><b>{{ q.actions.get('auto_send', 0) }}</b><span>answered by the agent</span></div>
+  <div class="stat"><b>{{ q.outbox.get('sent', 0) }}</b><span>writes delivered</span></div>
+  <div class="stat"><b>{{ q.outbox.get('pending', 0) }}</b><span>writes waiting (retry)</span></div>
+  <div class="stat"><b>{{ q.outbox.get('failed', 0) }}</b><span>writes failed</span></div>
+</div>
+
+<h2>Drafts awaiting review ({{ q.pending|length }})</h2>
+<table>
+  <tr><th>ticket</th><th>subject</th><th>queue</th><th>priority</th><th>why a human</th><th>cites</th><th>waiting since</th></tr>
+  {% for item, t in q.pending %}
+  <tr>
+    <td><a href="/tickets/{{ item.ticket_id }}">{{ item.ticket_id }}</a></td>
+    <td>{{ t.subject if t else '' }}</td>
+    <td>{{ t.queue if t else '' }}</td>
+    <td class="{{ t.priority if t else '' }}">{{ t.priority if t else '' }}</td>
+    <td>{{ item.reason }}</td>
+    <td>{{ item.article_id or '-' }}</td>
+    <td>{{ item.created_at.strftime('%H:%M:%S') }}</td>
+  </tr>
+  {% else %}
+  <tr><td colspan="7">Nothing waiting.</td></tr>
+  {% endfor %}
+</table>
+
+<h2>Recent tickets</h2>
+<table>
+  <tr><th>ticket</th><th>subject</th><th>queue</th><th>priority</th><th>action</th><th>rule</th></tr>
+  {% for t in q.recent %}
+  <tr>
+    <td><a href="/tickets/{{ t.id }}">{{ t.id }}</a></td>
+    <td>{{ t.subject }}</td>
+    <td>{{ t.queue }}</td>
+    <td class="{{ t.priority }}">{{ t.priority }}</td>
+    <td><span class="pill {{ t.action }}">{{ t.action }}</span></td>
+    <td><code>{{ t.rule }}</code></td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if q.decided %}
+<h2>Recent human decisions</h2>
+<table>
+  <tr><th>ticket</th><th>verdict</th><th>by</th><th>when</th></tr>
+  {% for item in q.decided %}
+  <tr><td><a href="/tickets/{{ item.ticket_id }}">{{ item.ticket_id }}</a></td><td>{{ item.status }}</td><td>{{ item.reviewer }}</td><td>{{ item.decided_at.strftime('%Y-%m-%d %H:%M:%S') if item.decided_at else '' }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

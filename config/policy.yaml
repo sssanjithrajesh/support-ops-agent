@@ -1,0 +1,134 @@
+# The business rules of the agent, kept as data so a support lead can change them without a deploy.
+# Every rule here is named, and the name appears in the decision trace stored on the ticket.
+
+queues:
+  # The ten queues the dataset uses. `tag` is what we write on the ticket; `owner` is who reads it.
+  - name: Technical Support
+    tag: q_technical
+    owner: Tier 2 engineers
+  - name: Product Support
+    tag: q_product
+    owner: Product specialists
+  - name: Customer Service
+    tag: q_customer_service
+    owner: Front-line agents
+  - name: IT Support
+    tag: q_it
+    owner: Internal IT desk
+  - name: Billing and Payments
+    tag: q_billing
+    owner: Billing team
+  - name: Returns and Exchanges
+    tag: q_returns
+    owner: Fulfilment
+  - name: Service Outages and Maintenance
+    tag: q_outages
+    owner: On-call SRE
+  - name: Sales and Pre-Sales
+    tag: q_sales
+    owner: Sales development
+  - name: Human Resources
+    tag: q_hr
+    owner: People team
+  - name: General Inquiry
+    tag: q_general
+    owner: Front-line agents
+
+priorities: [low, medium, high]
+
+# Queue hints: words a support lead associates with a queue. Each distinct hint that matches adds
+# `queue_hint_weight` to that queue's log-score on top of the text classifier. The trace shows which
+# hints fired, so a wrong route can be fixed here by the person who owns the queue, not in code.
+queue_hint_weight: 2.0
+# The classifier's certainty is divided by (ticket tokens / this number). 6 means a 60-token ticket is
+# flattened 10x. Chosen on the 30 hand-labelled cases; the 500 held-out tickets check it did no harm.
+classifier_temperature_tokens: 6
+queue_hints:
+  Billing and Payments: ["\\binvoice", "\\bcharged\\b", "\\bcharges?\\b", "\\bpayment", "\\bbilling\\b", "\\brefund", "\\brenewal\\b", "\\bcredit card\\b", "\\bstatement\\b", "\\bsubscription fee"]
+  Returns and Exchanges: ["\\breturn(ing)?\\b", "\\bexchange\\b", "\\breplacement\\b", "\\bdefective\\b", "\\bwarranty\\b", "\\bshipp(ed|ing)\\b", "\\border (number|id|#)", "\\bmissing items?\\b", "\\bincomplete (order|bundle|shipment)"]
+  Sales and Pre-Sales: ["\\bdemo\\b", "\\bquote\\b", "\\bpricing\\b", "\\bprice list\\b", "\\bseats\\b", "\\bevaluat(e|ing)\\b", "\\btrial\\b", "\\bpre-?sales\\b", "\\bpurchase\\b", "\\bdiscounts?\\b"]
+  Service Outages and Maintenance: ["\\boutages?\\b", "\\b(service|system) (disruptions?|interruptions?)\\b", "\\bis down\\b", "\\bare down\\b", "\\bmaintenance window\\b", "\\b(500|502|503) errors?", "\\bdowntime\\b"]
+  Technical Support: ["\\bcrash", "\\berror (message|code)\\b", "\\bbug\\b", "\\bnot (working|syncing|loading)\\b", "\\bfail(ed|ing|ure)\\b", "\\blog ?in\\b", "\\blocked out\\b", "\\bauthenticat", "\\btwo-?factor\\b", "\\bpassword\\b", "\\bbreach\\b", "\\bphishing\\b", "\\bsecurity incident\\b", "\\bvanished\\b", "\\bdisappear"]
+  Product Support: ["\\bfeature request\\b", "\\benhancement", "\\bhow (do|can) (i|we)\\b", "\\bset up\\b", "\\bsetup\\b", "\\bconfigur", "\\bdocumentation\\b", "\\bintegration options\\b", "\\bguidance on\\b"]
+  IT Support: ["\\bvpn\\b", "\\blaptop\\b", "\\bworkstation\\b", "\\bprinter\\b", "\\bactive directory\\b", "\\bemail (client|account) (setup|not)\\b", "\\binternal (network|system)\\b"]
+  Human Resources: ["\\bpayroll\\b", "\\bpayslip\\b", "\\bvacation\\b", "\\bleave (request|balance)\\b", "\\bbenefits\\b", "\\bonboarding\\b", "\\bemployee (training|handbook|record)\\b", "\\bhr\\b"]
+  Customer Service: ["\\bcomplaint\\b", "\\bdelete (my|all my|our) (personal )?(data|information)\\b", "\\bgdpr\\b", "\\bpersonal data\\b", "\\bcancel (my|our) (subscription|account)\\b", "\\bfeedback\\b", "\\bspeak (to|with) (a|someone)\\b"]
+  General Inquiry: ["\\bgeneral (question|inquiry|enquiry)\\b", "\\bjust wondering\\b", "\\bwho (do|should) i contact\\b", "\\bopening hours\\b", "\\bmore information about\\b"]
+
+# Signals are regexes matched against subject + body (case-insensitive, word boundaries where sensible).
+# They are the only part of triage a reviewer needs to read to know why a ticket was escalated.
+signals:
+  legal_threat:
+    description: customer mentions lawyers, lawsuits, regulators or chargebacks
+    patterns: ["\\blawyer\\b", "\\battorney\\b", "\\blegal action\\b", "\\bsue\\b", "\\blawsuit\\b", "\\bchargeback\\b", "\\bregulator\\b", "\\bconsumer protection\\b", "\\bbetter business bureau\\b"]
+  security:
+    description: possible account compromise or data exposure
+    patterns: ["\\bhacked\\b", "\\bunauthori[sz]ed\\b", "\\bbreach\\b", "\\bphishing\\b", "\\bcompromised\\b", "\\bsuspicious (login|activity|transaction)", "\\bstolen\\b", "\\bfraud"]
+  data_loss:
+    description: customer reports lost, deleted or corrupted data
+    patterns: ["\\bdata loss\\b", "\\blost (all |my |our )?(data|files|records)", "\\bdeleted (all |my |our )?(data|files|records|account)", "\\bcorrupt(ed)?\\b", "\\bwiped\\b", "\\b(vanished|disappeared)\\b"]
+  outage:
+    description: service down for many users, not one person's setup
+    patterns: ["\\boutages?\\b", "\\b(service|system) disruptions?\\b", "\\bis down\\b", "\\bare down\\b", "\\bwent down\\b", "\\bcompletely (down|unavailable|inaccessible)", "\\ball (our |the )?users\\b", "\\b(whole|entire) (team|company|organi[sz]ation)\\b", "\\b(500|502|503) errors?"]
+  angry:
+    description: strong negative language; a human should read it
+    patterns: ["\\bunacceptable\\b", "\\bfurious\\b", "\\bworst\\b", "\\bridiculous\\b", "\\bdisgust", "\\bfed up\\b", "\\bincompetent\\b", "\\bterrible (service|experience)", "\\bimmediately\\b.*\\b(refund|cancel|escalate)"]
+  refund_request:
+    description: money is being asked back
+    patterns: ["\\brefund", "\\bmoney back\\b", "\\breimburse"]
+  cancellation:
+    description: customer wants to leave
+    patterns: ["\\bcancel (my|our|the) (subscription|account|order|service|plan)", "\\bclose (my|our) account\\b", "\\bterminate (my|our|the) (contract|subscription|service)"]
+  privacy_request:
+    description: GDPR / CCPA style request; has a legal clock
+    patterns: ["\\bgdpr\\b", "\\bccpa\\b", "\\bdelete (my|all my|our) (personal )?(data|information)", "\\bright to (erasure|be forgotten|access)\\b", "\\bdata (subject|access) request\\b", "\\bpersonal data\\b"]
+  pii_in_ticket:
+    description: card or government id numbers pasted into the ticket; redact before anything is sent anywhere
+    patterns: ["\\b(?:\\d[ -]?){13,16}\\b", "\\b\\d{3}-\\d{2}-\\d{4}\\b"]
+  enterprise:
+    description: contract, SLA or enterprise account language
+    patterns: ["\\bsla\\b", "\\benterprise\\b", "\\bcontract\\b", "\\baccount manager\\b", "\\bprocurement\\b"]
+
+# Escalation goes to Slack and pauses the agent. Any one rule is enough; the trace names which fired.
+escalate_when:
+  - name: legal_or_security
+    any_signal: [legal_threat, security]
+  - name: data_loss_reported
+    any_signal: [data_loss]
+  - name: privacy_clock
+    any_signal: [privacy_request]
+  - name: outage_high
+    any_signal: [outage]
+    min_priority: high
+  - name: angry_and_high
+    all_signals: [angry]
+    min_priority: high
+  - name: enterprise_and_high
+    all_signals: [enterprise]
+    min_priority: high
+
+# Auto-send is the only path where the customer hears from software without a human reading it.
+# It is deliberately narrow. Everything else lands in the review queue with a draft attached.
+auto_send:
+  queues: [Customer Service, General Inquiry, Sales and Pre-Sales, Returns and Exchanges]
+  max_priority: medium
+  min_queue_confidence: 0.55
+  min_kb_score: 0.25
+  forbidden_signals: [legal_threat, security, data_loss, outage, angry, refund_request, cancellation, privacy_request, pii_in_ticket, enterprise]
+
+# Priority boosts applied on top of the classifier's guess. The trace records each one.
+priority_boosts:
+  outage: 2
+  security: 2
+  data_loss: 2
+  legal_threat: 1
+  angry: 1
+  enterprise: 1
+  privacy_request: 1
+
+knowledge_base:
+  dir: kb
+  top_k: 3
+
+slack:
+  channel_hint: "#support-escalations"

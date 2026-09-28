@@ -1,0 +1,600 @@
+{
+  "planner": "deterministic",
+  "overall": {
+    "n": 30,
+    "queue_accuracy": 0.8,
+    "priority_accuracy": 0.5333,
+    "action_accuracy": 0.9667,
+    "escalation_recall": 1.0,
+    "escalation_precision": 0.9,
+    "unsafe_autosend_rate": 0.0,
+    "kb_top1": 0.8824,
+    "signal_recall": 1.0,
+    "dataset_label_agreement": 0.3043
+  },
+  "by_action": {
+    "auto_send": {
+      "n": 2,
+      "queue_accuracy": 1.0,
+      "priority_accuracy": 0.5,
+      "action_accuracy": 1.0,
+      "escalation_recall": 0.0,
+      "escalation_precision": 0.0,
+      "unsafe_autosend_rate": 0.0,
+      "kb_top1": 1.0,
+      "signal_recall": 0.0,
+      "dataset_label_agreement": 0.0
+    },
+    "escalate": {
+      "n": 9,
+      "queue_accuracy": 1.0,
+      "priority_accuracy": 0.8889,
+      "action_accuracy": 1.0,
+      "escalation_recall": 1.0,
+      "escalation_precision": 1.0,
+      "unsafe_autosend_rate": 0.0,
+      "kb_top1": 0.8571,
+      "signal_recall": 1.0,
+      "dataset_label_agreement": 0.3333
+    },
+    "review": {
+      "n": 19,
+      "queue_accuracy": 0.6842,
+      "priority_accuracy": 0.3684,
+      "action_accuracy": 0.9474,
+      "escalation_recall": 0.0,
+      "escalation_precision": 0.0,
+      "unsafe_autosend_rate": 0.0,
+      "kb_top1": 0.875,
+      "signal_recall": 1.0,
+      "dataset_label_agreement": 0.2941
+    }
+  },
+  "heldout": {
+    "n": 500,
+    "queue_accuracy": 0.334,
+    "priority_accuracy": 0.42,
+    "majority_queue_baseline": 0.278,
+    "actions": {
+      "auto_send": 2,
+      "escalate": 77,
+      "review": 421
+    }
+  },
+  "cases": [
+    {
+      "id": "case-01",
+      "source": "dataset",
+      "expected": {
+        "queue": "Sales and Pre-Sales",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Billing and Payments",
+        "priority": "medium",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-009"
+      }
+    },
+    {
+      "id": "case-02",
+      "source": "dataset",
+      "expected": {
+        "queue": "General Inquiry",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Billing and Payments",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-007"
+      }
+    },
+    {
+      "id": "case-03",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "medium",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Product Support",
+        "priority": "high",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-004"
+      }
+    },
+    {
+      "id": "case-04",
+      "source": "dataset",
+      "expected": {
+        "queue": "Billing and Payments",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Billing and Payments",
+        "priority": "medium",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-005"
+      }
+    },
+    {
+      "id": "case-05",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "escalate",
+        "rule": "data_loss_reported",
+        "signals": [
+          "data_loss"
+        ],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-06",
+      "source": "dataset",
+      "expected": {
+        "queue": "Product Support",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Product Support",
+        "priority": "high",
+        "action": "escalate",
+        "rule": "legal_or_security",
+        "signals": [
+          "security"
+        ],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-07",
+      "source": "dataset",
+      "expected": {
+        "queue": "Product Support",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Product Support",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-08",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "medium",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-001"
+      }
+    },
+    {
+      "id": "case-09",
+      "source": "dataset",
+      "expected": {
+        "queue": "Product Support",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Product Support",
+        "priority": "medium",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-10",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "escalate",
+        "rule": "legal_or_security",
+        "signals": [
+          "security"
+        ],
+        "kb": "KB-004"
+      }
+    },
+    {
+      "id": "case-11",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-010"
+      }
+    },
+    {
+      "id": "case-12",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "medium",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-13",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "medium",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Product Support",
+        "priority": "medium",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-14",
+      "source": "dataset",
+      "expected": {
+        "queue": "Product Support",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Product Support",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-15",
+      "source": "dataset",
+      "expected": {
+        "queue": "Returns and Exchanges",
+        "priority": "medium",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Returns and Exchanges",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-007"
+      }
+    },
+    {
+      "id": "case-16",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "escalate",
+        "rule": "legal_or_security",
+        "signals": [
+          "security"
+        ],
+        "kb": "KB-004"
+      }
+    },
+    {
+      "id": "case-17",
+      "source": "dataset",
+      "expected": {
+        "queue": "Service Outages and Maintenance",
+        "priority": "high",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Service Outages and Maintenance",
+        "priority": "high",
+        "action": "escalate",
+        "rule": "outage_high",
+        "signals": [
+          "outage"
+        ],
+        "kb": "KB-010"
+      }
+    },
+    {
+      "id": "case-18",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "high",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "medium",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-19",
+      "source": "dataset",
+      "expected": {
+        "queue": "Service Outages and Maintenance",
+        "priority": "high",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Service Outages and Maintenance",
+        "priority": "high",
+        "action": "escalate",
+        "rule": "outage_high",
+        "signals": [
+          "outage"
+        ],
+        "kb": "KB-008"
+      }
+    },
+    {
+      "id": "case-20",
+      "source": "dataset",
+      "expected": {
+        "queue": "Service Outages and Maintenance",
+        "priority": "high",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Service Outages and Maintenance",
+        "priority": "high",
+        "action": "escalate",
+        "rule": "outage_high",
+        "signals": [
+          "outage"
+        ],
+        "kb": "KB-002"
+      }
+    },
+    {
+      "id": "case-21",
+      "source": "dataset",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "medium",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "medium",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-22",
+      "source": "dataset",
+      "expected": {
+        "queue": "Sales and Pre-Sales",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Customer Service",
+        "priority": "high",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-009"
+      }
+    },
+    {
+      "id": "case-23",
+      "source": "dataset",
+      "expected": {
+        "queue": "Product Support",
+        "priority": "low",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "General Inquiry",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-003"
+      }
+    },
+    {
+      "id": "case-24",
+      "source": "handwritten",
+      "expected": {
+        "queue": "Technical Support",
+        "priority": "medium",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Technical Support",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [],
+        "kb": "KB-001"
+      }
+    },
+    {
+      "id": "case-25",
+      "source": "handwritten",
+      "expected": {
+        "queue": "Billing and Payments",
+        "priority": "high",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Billing and Payments",
+        "priority": "medium",
+        "action": "escalate",
+        "rule": "legal_or_security",
+        "signals": [
+          "legal_threat",
+          "refund_request"
+        ],
+        "kb": "KB-006"
+      }
+    },
+    {
+      "id": "case-26",
+      "source": "handwritten",
+      "expected": {
+        "queue": "Customer Service",
+        "priority": "medium",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Customer Service",
+        "priority": "medium",
+        "action": "escalate",
+        "rule": "privacy_clock",
+        "signals": [
+          "privacy_request"
+        ],
+        "kb": "KB-011"
+      }
+    },
+    {
+      "id": "case-27",
+      "source": "handwritten",
+      "expected": {
+        "queue": "Billing and Payments",
+        "priority": "medium",
+        "action": "review"
+      },
+      "predicted": {
+        "queue": "Billing and Payments",
+        "priority": "low",
+        "action": "review",
+        "rule": "auto_send_failed",
+        "signals": [
+          "pii_in_ticket",
+          "refund_request"
+        ],
+        "kb": "KB-005"
+      }
+    },
+    {
+      "id": "case-28",
+      "source": "handwritten",
+      "expected": {
+        "queue": "Service Outages and Maintenance",
+        "priority": "high",
+        "action": "escalate"
+      },
+      "predicted": {
+        "queue": "Service Outages and Maintenance",
+        "priority": "high",
+        "action": "escalate",
+        "rule": "outage_high",
+        "signals": [
+          "outage"
+        ],
+        "kb": "KB-008"
+      }
+    },
+    {
+      "id": "case-29",
+      "source": "handwritten",
+      "expected": {
+        "queue": "Sales and Pre-Sales",
+        "priority": "low",
+        "action": "auto_send"
+      },
+      "predicted": {
+        "queue": "Sales and Pre-Sales",
+        "priority": "low",
+        "action": "auto_send",
+        "rule": "auto_send",
+        "signals": [],
+        "kb": "KB-009"
+      }
+    },
+    {
+      "id": "case-30",
+      "source": "handwritten",
+      "expected": {
+        "queue": "Returns and Exchanges",
+        "priority": "low",
+        "action": "auto_send"
+      },
+      "predicted": {
+        "queue": "Returns and Exchanges",
+        "priority": "medium",
+        "action": "auto_send",
+        "rule": "auto_send",
+        "signals": [],
+        "kb": "KB-007"
+      }
+    }
+  ]
+}

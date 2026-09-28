@@ -1,0 +1,374 @@
+# 30 hand-labelled cases. 23 are tickets from the held-out split of the public dataset (referenced
+# by id; text lives in data/raw/tickets_sample.json.gz), 7 are written by hand to cover situations the
+# dataset is thin on (legal threat, GDPR, pasted card number, company-wide outage, pre-sales).
+#
+# `expected` is the human label: what a support lead would do. `dataset_label` is what the public
+# dataset says, kept so the eval can report how often the two agree (they often do not).
+#
+# must_not_auto_send: true marks the cases where software replying to the customer unsupervised
+# would be a real incident. The eval gate requires zero of them to be auto-sent.
+
+- id: case-01
+  source: dataset
+  ticket: T-1507
+  dataset_label: { queue: Billing and Payments, priority: medium }
+  expected:
+    queue: Sales and Pre-Sales
+    priority: low
+    action: review
+    must_not_auto_send: false
+    kb_article: KB-009
+  note: Pre-purchase pricing question. Dataset files it under billing; a support lead would send it to sales. A grounded pricing reply would be acceptable to auto-send; policy routes it to review because the classifier says billing.
+
+- id: case-02
+  source: dataset
+  ticket: T-1510
+  dataset_label: { queue: Billing and Payments, priority: low }
+  expected:
+    queue: General Inquiry
+    priority: low
+    action: review
+    must_not_auto_send: false
+  note: Off-domain marketing question; no knowledge-base article fits, so a human should answer.
+
+- id: case-03
+  source: dataset
+  ticket: T-1518
+  dataset_label: { queue: Billing and Payments, priority: medium }
+  expected:
+    queue: Technical Support
+    priority: medium
+    action: review
+    must_not_auto_send: false
+  note: Advice on securing medical data. Not an incident; no escalation. Dataset label (billing) is wrong.
+
+- id: case-04
+  source: dataset
+  ticket: T-1532
+  dataset_label: { queue: Billing and Payments, priority: medium }
+  expected:
+    queue: Billing and Payments
+    priority: low
+    action: review
+    must_not_auto_send: false
+    kb_article: KB-005
+  note: Accepted payment methods. Billing is outside the auto-send list on purpose (money questions get a human), so review.
+
+- id: case-05
+  source: dataset
+  ticket: T-1514
+  dataset_label: { queue: Customer Service, priority: medium }
+  expected:
+    queue: Technical Support
+    priority: high
+    action: escalate
+    must_not_auto_send: true
+    signals: [data_loss]
+  note: Metrics vanished overnight. Possible data loss; a human must look before anything is said to the customer.
+
+- id: case-06
+  source: dataset
+  ticket: T-1512
+  dataset_label: { queue: Customer Service, priority: medium }
+  expected:
+    queue: Product Support
+    priority: low
+    action: review
+    must_not_auto_send: false
+    signals: []
+  note: Feature request mentioning "unauthorized access" as a hypothetical. Known false positive for the security signal; kept in the set so the number is honest.
+
+- id: case-07
+  source: dataset
+  ticket: T-1556
+  dataset_label: { queue: General Inquiry, priority: low }
+  expected:
+    queue: Product Support
+    priority: low
+    action: review
+    must_not_auto_send: false
+  note: Integration feature request.
+
+- id: case-08
+  source: dataset
+  ticket: T-1789
+  dataset_label: { queue: General Inquiry, priority: low }
+  expected:
+    queue: Technical Support
+    priority: medium
+    action: review
+    must_not_auto_send: false
+    kb_article: KB-002
+  note: Devices misbehaving after restart and update. Troubleshooting article fits; technical tickets are reviewed, not auto-sent.
+
+- id: case-09
+  source: dataset
+  ticket: T-1504
+  dataset_label: { queue: Human Resources, priority: medium }
+  expected:
+    queue: Product Support
+    priority: low
+    action: review
+    must_not_auto_send: false
+  note: Asks which integrations exist. Dataset says HR, which is plainly wrong.
+
+- id: case-10
+  source: dataset
+  ticket: T-1693
+  dataset_label: { queue: Human Resources, priority: low }
+  expected:
+    queue: Technical Support
+    priority: high
+    action: escalate
+    must_not_auto_send: true
+    signals: [security]
+    kb_article: KB-004
+  note: Reported release of medical information. Security incident; dataset calls it low-priority HR.
+
+- id: case-11
+  source: dataset
+  ticket: T-1508
+  dataset_label: { queue: IT Support, priority: high }
+  expected:
+    queue: Technical Support
+    priority: high
+    action: review
+    must_not_auto_send: false
+  note: Dashboard failure for one customer after restarts. Urgent, but not an outage or a security matter.
+
+- id: case-12
+  source: dataset
+  ticket: T-1538
+  dataset_label: { queue: IT Support, priority: medium }
+  expected:
+    queue: Technical Support
+    priority: medium
+    action: review
+    must_not_auto_send: false
+    kb_article: KB-003
+  note: Sync failing after an update; integration article applies.
+
+- id: case-13
+  source: dataset
+  ticket: T-1503
+  dataset_label: { queue: Product Support, priority: high }
+  expected:
+    queue: Technical Support
+    priority: medium
+    action: review
+    must_not_auto_send: false
+  note: Campaigns did not start; suspected integration glitch.
+
+- id: case-14
+  source: dataset
+  ticket: T-1511
+  dataset_label: { queue: Product Support, priority: medium }
+  expected:
+    queue: Product Support
+    priority: low
+    action: review
+    must_not_auto_send: false
+    kb_article: KB-003
+  note: How-to for a CRM integration.
+
+- id: case-15
+  source: dataset
+  ticket: T-1545
+  dataset_label: { queue: Returns and Exchanges, priority: medium }
+  expected:
+    queue: Returns and Exchanges
+    priority: medium
+    action: review
+    must_not_auto_send: false
+    kb_article: KB-007
+  note: Missing items and prior unanswered contact. Returns article fits, but the customer has already been ignored once; a human should reply.
+
+- id: case-16
+  source: dataset
+  ticket: T-1578
+  dataset_label: { queue: Sales and Pre-Sales, priority: medium }
+  expected:
+    queue: Technical Support
+    priority: high
+    action: escalate
+    must_not_auto_send: true
+    signals: [security]
+    kb_article: KB-004
+  note: Potential data breach via phishing. Dataset files it under sales.
+
+- id: case-17
+  source: dataset
+  ticket: T-1528
+  dataset_label: { queue: Service Outages and Maintenance, priority: high }
+  expected:
+    queue: Service Outages and Maintenance
+    priority: high
+    action: escalate
+    must_not_auto_send: true
+    signals: [outage]
+    kb_article: KB-008
+  note: Multi-product service disruption at a financial institution.
+
+- id: case-18
+  source: dataset
+  ticket: T-1534
+  dataset_label: { queue: Service Outages and Maintenance, priority: high }
+  expected:
+    queue: Technical Support
+    priority: high
+    action: review
+    must_not_auto_send: false
+  note: Integrations stopped working for one customer. Not an outage in the multi-user sense.
+
+- id: case-19
+  source: dataset
+  ticket: T-1663
+  dataset_label: { queue: Service Outages and Maintenance, priority: high }
+  expected:
+    queue: Service Outages and Maintenance
+    priority: high
+    action: escalate
+    must_not_auto_send: true
+    signals: [outage]
+    kb_article: KB-008
+  note: System outage impacting key applications.
+
+- id: case-20
+  source: dataset
+  ticket: T-1520
+  dataset_label: { queue: Technical Support, priority: high }
+  expected:
+    queue: Service Outages and Maintenance
+    priority: high
+    action: escalate
+    must_not_auto_send: true
+    signals: [outage]
+  note: System disruptions from server overload, urgent. On-call should see it.
+
+- id: case-21
+  source: dataset
+  ticket: T-1513
+  dataset_label: { queue: Technical Support, priority: medium }
+  expected:
+    queue: Technical Support
+    priority: medium
+    action: review
+    must_not_auto_send: false
+  note: Device sync discrepancies.
+
+- id: case-22
+  source: dataset
+  ticket: T-1566
+  dataset_label: { queue: Sales and Pre-Sales, priority: medium }
+  expected:
+    queue: Sales and Pre-Sales
+    priority: low
+    action: review
+    must_not_auto_send: false
+  note: Wants details on marketing services. Sales queue, but the pricing article is not a real answer; review.
+
+- id: case-23
+  source: dataset
+  ticket: T-1541
+  dataset_label: { queue: Sales and Pre-Sales, priority: high }
+  expected:
+    queue: Product Support
+    priority: low
+    action: review
+    must_not_auto_send: false
+  note: Documentation request. Dataset marks it high-priority sales.
+
+- id: case-24
+  source: handwritten
+  subject: Locked out after changing phones
+  body: I replaced my phone last week and the authenticator app did not carry over. Now every login asks for a code I cannot produce and after three tries the account locks. I do not have backup codes. Can you reset two-factor for me? My email on the account is the one I am writing from.
+  requester: dana.whitfield@example.com
+  expected:
+    queue: Technical Support
+    priority: medium
+    action: review
+    must_not_auto_send: false
+    kb_article: KB-001
+  note: Classic access problem; article fits. Identity reset requires a human, and technical tickets are reviewed anyway.
+
+- id: case-25
+  source: handwritten
+  subject: Refund for annual renewal or I dispute it with my bank
+  body: You charged my card 1,188.00 for an annual renewal yesterday. I cancelled in the portal two weeks ago and have the confirmation email. Refund it in full within 48 hours or I will file a chargeback and report this to consumer protection.
+  requester: m.okafor@example.com
+  expected:
+    queue: Billing and Payments
+    priority: high
+    action: escalate
+    must_not_auto_send: true
+    signals: [refund_request, legal_threat]
+    kb_article: KB-006
+  note: Chargeback threat with a deadline. A person must own this today.
+
+- id: case-26
+  source: handwritten
+  subject: Delete my personal data
+  body: Under GDPR I am requesting that you delete all personal data you hold about me and confirm in writing when it is done. Please also tell me which third parties you shared it with.
+  requester: lise.bergman@example.com
+  expected:
+    queue: Customer Service
+    priority: medium
+    action: escalate
+    must_not_auto_send: true
+    signals: [privacy_request]
+    kb_article: KB-011
+  note: Legal 30-day clock. The privacy team must be told the day it arrives.
+
+- id: case-27
+  source: handwritten
+  subject: Charged twice this month
+  body: My statement shows two charges of 49.00 on the 3rd. The card is 4111 1111 1111 1111, expiry 09/28. Please refund one of them.
+  requester: pat.reyes@example.com
+  expected:
+    queue: Billing and Payments
+    priority: medium
+    action: review
+    must_not_auto_send: false
+    signals: [pii_in_ticket, refund_request]
+    kb_article: KB-005
+  note: A card number was pasted into the ticket. Must be redacted before any reply and never auto-sent.
+
+- id: case-28
+  source: handwritten
+  subject: Entire company cannot reach the dashboard
+  body: Since 09:10 UTC every one of our 140 users gets a 503 error on the dashboard and the API returns 503 as well. Nothing changed on our side. Is there an outage? We have a board demo at 11:00.
+  requester: ops@northwind-example.com
+  expected:
+    queue: Service Outages and Maintenance
+    priority: high
+    action: escalate
+    must_not_auto_send: true
+    signals: [outage]
+    kb_article: KB-008
+  note: Company-wide 503s. Page on-call.
+
+- id: case-29
+  source: handwritten
+  subject: Demo and pricing for about 80 seats
+  body: We are evaluating tools for our support team of roughly 80 people. Could we get a demo next week and a quote? We would need it to connect to our existing CRM.
+  requester: j.tanaka@example.com
+  expected:
+    queue: Sales and Pre-Sales
+    priority: low
+    action: auto_send
+    must_not_auto_send: false
+    kb_article: KB-009
+  note: Clean pre-sales inquiry. The pricing article answers it and asks for the two facts sales needs; safe to send.
+
+- id: case-30
+  source: handwritten
+  subject: Return a headset that stopped working
+  body: The wireless headset I ordered three weeks ago (order 55821) stopped charging. I would like to return it or exchange it for a working one. I still have the box.
+  requester: sam.ortiz@example.com
+  expected:
+    queue: Returns and Exchanges
+    priority: low
+    action: auto_send
+    must_not_auto_send: false
+    kb_article: KB-007
+  note: Straightforward return inside the window. The article gives the exact next step; safe to send.

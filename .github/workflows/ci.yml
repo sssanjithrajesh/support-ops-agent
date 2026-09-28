@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync --extra dev
+      - name: lint
+        run: uv run ruff check . && uv run ruff format --check .
+      - name: tests
+        run: uv run pytest -q
+      - name: eval regression gate (30 hand-labelled cases + 500 held-out tickets)
+        run: uv run soa-eval --gate --no-report
+      - name: triage the committed sample and compare headline numbers
+        run: |
+          uv run soa-triage > /dev/null
+          git diff --exit-code -- docs/latest-run.json || (echo "triage output changed; commit docs/latest-run.json if intended" && exit 1)

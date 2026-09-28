@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="294" viewBox="0 0 760 294" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12">
+<rect width="760" height="294" fill="#ffffff" rx="8"/>
+<text x="150" y="24" font-size="15" font-weight="600" fill="#1a1a1a">Eval scorecard | deterministic planner | 30 hand-labelled cases | unsafe auto-send 0%</text>
+<rect x="150" y="36" width="10" height="10" fill="#2f80ed" rx="2"/>
+<text x="164" y="45" fill="#444">queue acc</text>
+<rect x="268" y="36" width="10" height="10" fill="#9b59b6" rx="2"/>
+<text x="282" y="45" fill="#444">priority acc</text>
+<rect x="386" y="36" width="10" height="10" fill="#27ae60" rx="2"/>
+<text x="400" y="45" fill="#444">action acc</text>
+<rect x="504" y="36" width="10" height="10" fill="#f2994a" rx="2"/>
+<text x="518" y="45" fill="#444">escalation recall</text>
+<rect x="622" y="36" width="10" height="10" fill="#16a085" rx="2"/>
+<text x="636" y="45" fill="#444">kb top-1</text>
+<line x1="150.0" y1="58" x2="150.0" y2="258" stroke="#e6e6e6"/>
+<text x="150.0" y="272" text-anchor="middle" fill="#888">0%</text>
+<line x1="295.0" y1="58" x2="295.0" y2="258" stroke="#e6e6e6"/>
+<text x="295.0" y="272" text-anchor="middle" fill="#888">25%</text>
+<line x1="440.0" y1="58" x2="440.0" y2="258" stroke="#e6e6e6"/>
+<text x="440.0" y="272" text-anchor="middle" fill="#888">50%</text>
+<line x1="585.0" y1="58" x2="585.0" y2="258" stroke="#e6e6e6"/>
+<text x="585.0" y="272" text-anchor="middle" fill="#888">75%</text>
+<line x1="730.0" y1="58" x2="730.0" y2="258" stroke="#e6e6e6"/>
+<text x="730.0" y="272" text-anchor="middle" fill="#888">100%</text>
+<text x="142" y="76" text-anchor="end" fill="#1a1a1a">auto_send (n=2)</text>
+<rect x="150" y="64" width="580.0" height="6" fill="#2f80ed" rx="1"/>
+<rect x="150" y="71" width="290.0" height="6" fill="#9b59b6" rx="1"/>
+<rect x="150" y="78" width="580.0" height="6" fill="#27ae60" rx="1"/>
+<rect x="150" y="85" width="0.0" height="6" fill="#f2994a" rx="1"/>
+<rect x="150" y="92" width="580.0" height="6" fill="#16a085" rx="1"/>
+<text x="142" y="124" text-anchor="end" fill="#1a1a1a">escalate (n=9)</text>
+<rect x="150" y="112" width="580.0" height="6" fill="#2f80ed" rx="1"/>
+<rect x="150" y="119" width="515.6" height="6" fill="#9b59b6" rx="1"/>
+<rect x="150" y="126" width="580.0" height="6" fill="#27ae60" rx="1"/>
+<rect x="150" y="133" width="580.0" height="6" fill="#f2994a" rx="1"/>
+<rect x="150" y="140" width="497.1" height="6" fill="#16a085" rx="1"/>
+<text x="142" y="172" text-anchor="end" fill="#1a1a1a">review (n=19)</text>
+<rect x="150" y="160" width="396.8" height="6" fill="#2f80ed" rx="1"/>
+<rect x="150" y="167" width="213.7" height="6" fill="#9b59b6" rx="1"/>
+<rect x="150" y="174" width="549.5" height="6" fill="#27ae60" rx="1"/>
+<rect x="150" y="181" width="0.0" height="6" fill="#f2994a" rx="1"/>
+<rect x="150" y="188" width="507.5" height="6" fill="#16a085" rx="1"/>
+<text x="142" y="220" text-anchor="end" fill="#1a1a1a" font-weight="600">OVERALL (n=30)</text>
+<rect x="150" y="208" width="464.0" height="6" fill="#2f80ed" rx="1"/>
+<rect x="150" y="215" width="309.3" height="6" fill="#9b59b6" rx="1"/>
+<rect x="150" y="222" width="560.7" height="6" fill="#27ae60" rx="1"/>
+<rect x="150" y="229" width="580.0" height="6" fill="#f2994a" rx="1"/>
+<rect x="150" y="236" width="511.8" height="6" fill="#16a085" rx="1"/>
+</svg>

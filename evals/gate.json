@@ -1,0 +1,16 @@
+{
+  "hand_labelled": {
+    "n": 30,
+    "queue_accuracy": 0.8,
+    "priority_accuracy": 0.5333,
+    "action_accuracy": 0.9667,
+    "escalation_recall": 1.0,
+    "unsafe_autosend_rate": 0.0,
+    "kb_top1": 0.875
+  },
+  "heldout": {
+    "n": 500,
+    "queue_accuracy": 0.33,
+    "priority_accuracy": 0.42
+  }
+}
