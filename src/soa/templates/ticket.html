@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Ticket {{ d.ticket.id }}{% endblock %}
+{% block content %}
+{% set t = d.ticket %}{% set run = d.run %}
+<h2>Ticket {{ t.id }}: {{ t.subject }}
+  <span class="pill {{ t.action }}">{{ t.action }}</span></h2>
+<p><b>{{ t.queue }}</b> | priority <span class="{{ t.priority }}">{{ t.priority }}</span> | rule <code>{{ t.rule }}</code> | from {{ t.requester }}</p>
+<pre>{{ t.body }}</pre>
+
+{% if run %}
+<div class="card">
+  <h2 style="margin-top:0">Why</h2>
+  <ul class="trace">
+    {% for line in run.triage.trace %}<li>{{ line }}</li>{% endfor %}
+    {% for h in run.kb_hits %}<li>kb {{ h.id }} {{ h.title }} (score {{ h.score }}; overlap {{ h.overlap|join(', ') }})</li>{% endfor %}
+    {% for r in run.decision.reasons %}<li>decision: {{ r }}</li>{% endfor %}
+  </ul>
+  <h2>Tool calls ({{ run.tool_calls|length }})</h2>
+  <table>
+    <tr><th>#</th><th>tool</th><th>args</th><th>result</th></tr>
+    {% for c in run.tool_calls %}
+    <tr><td>{{ loop.index }}</td><td><code>{{ c.name }}</code></td>
+      <td>{% for k, v in c.args.items() if k != 'ticket_id' %}{{ k }}={{ v }} {% endfor %}</td>
+      <td>{% if c.result is mapping %}{% for k in ['status', 'reason', 'action', 'rule', 'queue', 'priority', 'article_id', 'grounded', 'redactions'] if k in c.result %}{{ k }}={{ c.result[k] }} {% endfor %}{% else %}{{ c.result|length }} hits{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+{% for item in d.review_items %}
+<div class="card">
+  <h2 style="margin-top:0">Draft reply ({{ item.status }}{% if item.reviewer %} by {{ item.reviewer }}{% endif %})</h2>
+  <p style="font-size:13px;color:#666">Held for review because: {{ item.reason }}{% if item.article_id %}. Grounded in <code>{{ item.article_id }}</code>.{% endif %}</p>
+  {% if item.status == 'pending' %}
+  <form class="review" method="post" action="/review/{{ item.id }}">
+    <textarea name="final_body">{{ item.draft }}</textarea>
+    <div>
+      <input type="text" name="reviewer" placeholder="your name (required)" required>
+      <button class="primary" name="verdict" value="approve">Approve and send</button>
+      <button name="verdict" value="edit">Send my edited version</button>
+      <button class="danger" name="verdict" value="reject">Reject, I will reply myself</button>
+    </div>
+  </form>
+  {% else %}
+  <pre>{{ item.final_body or item.draft }}</pre>
+  {% endif %}
+</div>
+{% endfor %}
+
+{% if d.outbox %}
+<h2>Writes to the ticketing system and Slack</h2>
+<table>
+  <tr><th>target</th><th>kind</th><th>status</th><th>attempts</th><th>result / last error</th><th>idempotency key</th></tr>
+  {% for o in d.outbox %}
+  <tr><td>{{ o.target }}</td><td>{{ o.kind }}</td><td>{{ o.status }}</td><td>{{ o.attempts }}</td><td>{{ o.remote_id or o.last_error }}</td><td><code>{{ o.idempotency_key }}</code></td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+<p><a href="/">Back to the queue</a></p>
+{% endblock %}

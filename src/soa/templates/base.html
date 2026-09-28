@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}support-ops-agent{% endblock %}</title>
+<style>
+  body { font-family: "Segoe UI", Helvetica, Arial, sans-serif; margin: 0; color: #1a1a1a; background: #fafafa; }
+  header { background: #1f2933; color: #fff; padding: 12px 24px; display: flex; align-items: baseline; gap: 18px; }
+  header a { color: #fff; text-decoration: none; font-weight: 600; }
+  header small { color: #cbd2d9; }
+  main { padding: 20px 24px; max-width: 1180px; }
+  h2 { margin: 18px 0 8px; font-size: 18px; }
+  table { border-collapse: collapse; width: 100%; background: #fff; }
+  th, td { border-bottom: 1px solid #e6e6e6; padding: 7px 9px; text-align: left; font-size: 13px; vertical-align: top; }
+  th { background: #f3f4f6; font-weight: 600; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+  .escalate { background: #fde8e8; color: #9b1c1c; } .review { background: #fff3cd; color: #7a5a00; } .auto_send { background: #def7ec; color: #046c4e; }
+  .high { color: #b03a2e; font-weight: 600; } .medium { color: #7a5a00; } .low { color: #555; }
+  .stats { display: flex; gap: 14px; flex-wrap: wrap; margin: 8px 0 14px; }
+  .stat { background: #fff; border: 1px solid #e6e6e6; border-radius: 6px; padding: 8px 14px; min-width: 110px; }
+  .stat b { display: block; font-size: 20px; }
+  .stat span { font-size: 12px; color: #666; }
+  pre { background: #fff; border: 1px solid #e6e6e6; border-radius: 6px; padding: 10px; font-size: 12px; white-space: pre-wrap; }
+  .trace li { font-size: 13px; margin: 2px 0; font-family: Consolas, monospace; }
+  .card { background: #fff; border: 1px solid #e6e6e6; border-radius: 6px; padding: 12px 14px; margin: 10px 0; }
+  form.review { display: grid; gap: 8px; }
+  textarea { width: 100%; min-height: 200px; font-family: Consolas, monospace; font-size: 12px; }
+  input[type=text] { padding: 5px 8px; font-size: 13px; }
+  button { padding: 6px 12px; font-size: 13px; cursor: pointer; border-radius: 4px; border: 1px solid #999; background: #fff; }
+  button.primary { background: #2f6db3; color: #fff; border-color: #2f6db3; }
+  button.danger { background: #fff; color: #9b1c1c; border-color: #9b1c1c; }
+  code { background: #f3f3f3; padding: 1px 4px; border-radius: 3px; font-size: 12px; }
+  a { color: #2f6db3; }
+</style>
+</head>
+<body>
+<header>
+  <a href="/">support-ops-agent</a>
+  <small>review queue</small>
+  {% block header %}{% endblock %}
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>
